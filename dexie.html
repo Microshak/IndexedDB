@@ -27,7 +27,15 @@
         function populateSomeData() {
             log("Populating some data", "heading");
             return db.transaction("rw", db.friends, function () {
-                db.friends.clear();
+                db.friends.clear()
+                
+
+                for ( var i = 0; i < 100000; i++ ) {
+                
+                    db.friends.add(makeFriend());
+                
+                }
+
                 db.friends.add({ name: "David", shoeSize: 43 });
                 db.friends.add({ name: "Ylva", shoeSize: 37 });
                 db.friends.add({ name: "Jon", shoeSize: 44 });
@@ -35,18 +43,42 @@
                 db.friends.add({ name: "Daniel", shoeSize: 39 });
                 db.friends.add({ name: "Nils", shoeSize: 45 });
                 db.friends.add({ name: "Zlatan", shoeSize: 47 });
+
+                for ( var i = 0; i < 100000; i++ ) {
+                
+                db.friends.add(makeFriend());
+            
+            }
+
+
                 // Log data from DB:
-                db.friends.orderBy('name').each(function (friend) {
-                    log(JSON.stringify(friend));
-                });
+              //  db.friends.orderBy('name').each(function (friend) {
+               //     log(JSON.stringify(friend));
+               // });
+               log('number of friends loaded:' +  db.friends.count())
             }).catch(function (e) {
                 log(e, "error");
             });
+            alert('ready')
         }
 
         //
         // Examples
         //
+
+
+        function makeFriend() {
+   var name           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < 5; i++ ) {
+      name += characters.charAt(Math.floor(Math.random() * charactersLength));
+
+   }
+   size = Math.floor(Math.random() * 11); 
+   console.log(name)
+   return { name: name, shoeSize: size };
+}
         function equalsAnyOf() {
             log("db.friends.where('name').anyOf('David', 'Zlatan', 'Daniel')", "heading");
             return db.friends.where('name').anyOf('David', 'Zlatan', 'Daniel')
@@ -81,6 +113,8 @@
         }
 
         function logicalAND() {
+           
+           
             log("db.friends.where('name').startsWithIgnoreCase('da').and(function (friend) { return friend.shoeSize > 40; })", "heading");
             return db.friends.where('name').startsWithIgnoreCase('da')
                 .and(function (friend) { return friend.shoeSize > 40; })
@@ -104,8 +138,8 @@
                 .then(equalsAnyOf)
                 .then(equalsIgnoreCase)
                 .then(startsWithIgnoreCase)
-                .then(logicalOR)
-                .then(logicalAND)
+           //     .then(logicalOR)
+             //   .then(logicalAND)
             .catch(function (e) {
                 log(e, "error");
             });
