@@ -28,10 +28,10 @@
             log("Populating some data", "heading");
             return db.transaction("rw", db.friends, function () {
                 db.friends.clear()
-                
+                let x = 0
 
-                for ( var i = 0; i < 100000; i++ ) {
-                
+                for ( var i = 0; i < 10000; i++ ) {
+                x++;
                     db.friends.add(makeFriend());
                 
                 }
@@ -43,11 +43,11 @@
                 db.friends.add({ name: "Daniel", shoeSize: 39 });
                 db.friends.add({ name: "Nils", shoeSize: 45 });
                 db.friends.add({ name: "Zlatan", shoeSize: 47 });
-
-                for ( var i = 0; i < 100000; i++ ) {
+                    x += 7
+                for ( var i = 0; i < 10000; i++ ) {
                 
                 db.friends.add(makeFriend());
-            
+            x++;
             }
 
 
@@ -55,11 +55,11 @@
               //  db.friends.orderBy('name').each(function (friend) {
                //     log(JSON.stringify(friend));
                // });
-               log('number of friends loaded:' +  db.friends.count())
+               log('number of friends loaded:' +  x)
             }).catch(function (e) {
                 log(e, "error");
             });
-            alert('ready')
+           
         }
 
         //
@@ -104,9 +104,9 @@
         }
 
         function logicalOR() {
-            log("db.friends.where('name').startsWithIgnoreCase('da').or('shoeSize').below(40)", "heading");
+            log("db.friends.where('name').startsWithIgnoreCase('da').or('shoeSize').equals(4)", "heading");
             return db.friends.where('name').startsWithIgnoreCase('da')
-                             .or('shoeSize').below(40)
+                             .or('shoeSize').equals(4)
                              .each(function (friend) {
                                  log(JSON.stringify(friend));
                              });
@@ -115,9 +115,9 @@
         function logicalAND() {
            
            
-            log("db.friends.where('name').startsWithIgnoreCase('da').and(function (friend) { return friend.shoeSize > 40; })", "heading");
+            log("db.friends.where('name').startsWithIgnoreCase('da').and(function (friend) { return friend.shoeSize > 10; })", "heading");
             return db.friends.where('name').startsWithIgnoreCase('da')
-                .and(function (friend) { return friend.shoeSize > 40; })
+                .and(function (friend) { return friend.shoeSize > 10; })
                 .each(function (friend) {
                     log(JSON.stringify(friend));
                 });
@@ -132,14 +132,18 @@
             if (clazz) li.className = clazz;
             document.getElementById('log').appendChild(li);
         }
-
+        function done()
+        {
+            log('done');
+        }
         function runSamples() {
             populateSomeData()
                 .then(equalsAnyOf)
                 .then(equalsIgnoreCase)
                 .then(startsWithIgnoreCase)
-           //     .then(logicalOR)
-             //   .then(logicalAND)
+                .then(logicalOR)
+                .then(logicalAND)
+                .then(done)
             .catch(function (e) {
                 log(e, "error");
             });
